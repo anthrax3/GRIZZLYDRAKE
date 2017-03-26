@@ -91,8 +91,13 @@ def exploit(url, cmd):
     
 
 if __name__ == '__main__':
-	intro()
-	print("[*] Attempting to run `%s` on %s\n") % (cmd, url)
-	output = exploit(url, cmd)
-	print("[*] Returned data\n")
-	print(output)
+	if len(sys.argv) <= 1:
+		intro()
+		p.print_help()
+		sys.exit(1)
+	else:
+		intro()
+		print("[*] Attempting to run `%s` on %s\n") % (cmd, url)
+		output = exploit(url, cmd)
+		print("[*] Returned data\n")
+		print(output)
